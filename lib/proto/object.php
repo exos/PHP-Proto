@@ -83,30 +83,20 @@ class Object extends Scope {
     }
     
     public function extend () {
-        
-        if (count(func_get_args()) == 1) {
+       
+	$ins = $this->cloneObject();
+ 
+        foreach (func_get_args() as $proto) { 
             
-            $proto = func_get_arg(0);            
-            $ins = $this->cloneObject();
-            
-            if ( is_a($proto, 'Proto\Object') ) {
+            if ( is_a ($proto, 'Proto\Object') ) {
                 $ins->prototype( $proto->prototype );
             } else {
-                $ins->prototype($proto);
+                $ins->prototype( $proto );
             }
             
-            return $ins;
-            
-        } elseif (count(func_get_args()) > 1) {
-            
-            foreach (func_get_args() as $obj) {
-                $fobj = $this->extend($obj);
-            }
-            
-        } else {
-            // Nothing!
-            return $this;
-        }
+        } 
+
+	return $ins;
         
     }
     
