@@ -8,7 +8,7 @@ use Exceptions\PropertyUndefined as PropertyUndefinedException;
 class Object extends Scope {
     
     private $_initialize;
-    private $_prototype = array();
+    private $_prototype = null;
             
     public function __construct ($initfunction = null) {
         if ($initfunction) {
@@ -20,28 +20,23 @@ class Object extends Scope {
         } else {
             $this->_initialize = function () {};
         }
-        
-        $this->_content['prototype'] &= $this->_prototype;
+       
+	$this->_prototype = new Scope(); 
+        $this->_content['prototype'] = &$this->_prototype;
         
     }
     
     // Private:
     
-    private function _setPrototype (array $content) {
-        foreach ($content as $key => $val) {
-            if (is_string($key)) {
-                $this->_prototype[$key] = $val;
-            } else {
-                throw new DefinitionException('Property name is a ' . gettype($key));
-            }
-        }
+    private function _setPrototype (\Proto\Scope $content) {
+	$this->_prototype = $content;
     }
     
     // Magicos:
     
     public function __set ($var,$value) {
         if ($var == 'prototype') {
-            return $this->_setPrototype($value);
+            return $this->_prototype = new Scope($value);
         } else {
             return $this->_content[$var] = $value;
         }
@@ -49,14 +44,22 @@ class Object extends Scope {
     
     public function __call ($func, $args) {
         if ($func == 'prototype') {
-            return $this->_setPrototype($args[0]);
-        } else {
-            throw new PropertyUndefinedException($var . ' function is not defined');
+
+	    if (is_array($args[0])) {
+		$proto = new Scope($args[0]);
+	    } else {
+		$proto = $args[0];
+	    }
+
+            return $this->_setPrototype($proto);
         }
+
+	parent::__call($func, $args);
+
     }
     
     public function __invoke () {
-        return call_user_func(array($this,'create'), func_get_args());
+        return call_user_func_array(array($this,'instanced'), func_get_args());
     }
     
     // Public
@@ -69,10 +72,14 @@ class Object extends Scope {
         $this->_scope = $scope;
         return $this;
     }
-    
-    public function create () {
+   
+    public function create ($func) {
+	return new static($func);
+    }
+ 
+    public function instanced () {
         $instance = new Instance($this->_prototype);
-        call_user_func($this->_initialize, array_merge($instance, func_get_args()));
+        call_user_func_array($this->_initialize, array_merge(array($instance), func_get_args()));
         return $instance;
     }
     
@@ -89,10 +96,14 @@ class Object extends Scope {
         foreach (func_get_args() as $proto) { 
             
             if ( is_a ($proto, 'Proto\Object') ) {
-                $ins->prototype( $proto->prototype );
+		$content = $proto->prototype->____content();
             } else {
-                $ins->prototype( $proto );
+		$content = $proto;
             }
+
+	    foreach ($content as $key => $val) {
+		$ins->prototype->$key = $val;
+	    }
             
         } 
 
