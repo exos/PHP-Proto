@@ -17,19 +17,9 @@ class Instance extends Scope {
 	$this->_bind = $Scope;
     }
 
-    public function __call($func, $args) {
-        if (isset($this->_content[$func])) {
-            if (is_callable($this->_content[$func])) {
-
-		$self = $this->_bind ? $this->_bind : $this;
-
-                return call_user_func_array($this->_content[$func], array_merge(array($self), $args));
-            } else {
-                // error
-            }
-        } else {
-            throw new PropertyUndefinedException($func . ' is not defined');
-        }
+    public function call($func, $args, $bind = null) {
+        $self = is_null($bind) ? ($this->_bind ? $this->_bind : $this) : $bind;
+        parent::call($func, $args, $bind);
     }
 
 }

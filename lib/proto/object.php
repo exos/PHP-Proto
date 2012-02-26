@@ -37,12 +37,23 @@ class Object extends Scope {
     public function __set ($var,$value) {
         if ($var == 'prototype') {
             return $this->_prototype = new Scope($value);
-        } else {
-            return $this->_content[$var] = $value;
         }
+        
+        parent::__set($var,$value);
+                
     }
     
-    public function __call ($func, $args) {
+    public function __invoke () {
+        return call_user_func_array(array($this,'instanced'), func_get_args());
+    }
+    
+    // Public
+    
+    public static function create ($func) {
+	return new static($func);
+    }
+    
+    public function call ($func, $args, $bind = null) {
         if ($func == 'prototype') {
 
 	    if (is_array($args[0])) {
@@ -54,27 +65,7 @@ class Object extends Scope {
             return $this->_setPrototype($proto);
         }
 
-	parent::__call($func, $args);
-
-    }
-    
-    public function __invoke () {
-        return call_user_func_array(array($this,'instanced'), func_get_args());
-    }
-    
-    // Public
-    
-    public function getScope () {
-        return $this->_scope;
-    }
-    
-    public function setScope (Scope $scope) {
-        $this->_scope = $scope;
-        return $this;
-    }
-   
-    public function create ($func) {
-	return new static($func);
+	parent::call($func, $args, $bind);
     }
  
     public function instanced () {

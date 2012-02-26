@@ -4,14 +4,14 @@ require('../lib/autoload.php');
 
 date_default_timezone_set('UTC');
 
+
 use \Proto\Scope;
+use \Proto\ScopeVar;
 use \Proto\Object;
 
-
-
 $car = Object::create(function ($self,$model,$color) {
-        $self->model = $model;
-        $self->color = $color;
+        $self->model = new ScopeVar($model);
+        $self->color = new ScopeVar($color);
 });
 
 
