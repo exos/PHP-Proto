@@ -1,7 +1,7 @@
 Proto
 =====
 
-***because bitches lives prototypes***
+***because bitches loves prototypes***
 
 Use prototype pattern in PHP, simulate Scopes and prototype based objetcs, clones, etc.
 
