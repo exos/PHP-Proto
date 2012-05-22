@@ -73,6 +73,10 @@ class Scope {
     
     public function __get($var) {
         
+        if ($var == 'parent') {
+            return $this->getScope();
+        }
+        
         if (isset($this->_content[$var])) {
             return $this->_content[$var];
         }

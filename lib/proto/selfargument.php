@@ -21,6 +21,10 @@ class SelfArgument extends Scope {
     
     function __get ($var) {
         
+        if ($var == 'parent') {
+            return $this->_scope->getScope();
+        }
+        
         if (isset($this->_scope->$var)) {
             return $this->_scope->$var;
         } elseif ($scope = $this->_scope->is_set($var)) {
