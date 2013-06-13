@@ -1,5 +1,5 @@
 {
-    "name": "exos/Proto",
+    "name": "exos/proto",
     "description": "because bitches loves prototypes\nUse prototype pattern in PHP, simulate Scopes and prototype based objetcs, clones, etc.",
     "keywords": [
         "prototype",
