@@ -1,0 +1,22 @@
+{
+    "name": "exos/Proto",
+    "description": "because bitches loves prototypes\nUse prototype pattern in PHP, simulate Scopes and prototype based objetcs, clones, etc.",
+    "keywords": [
+        "prototype",
+        "proto"
+    ],
+    "homepage": "https://github.com/exos/PHP-Proto",
+    "version": "0.3.1",
+    "time": "2013-06-13",
+    "license": "GPL3",
+    "authors": [
+        {
+            "name": "Oscar Gentilezza (a.k.a Exos)",
+            "email": "tioscar@gmail.com",
+            "homepage": "https://blog.exodica.com.ar"
+        }
+    ],
+    "require": {
+        "php": ">=5.3"
+    }
+}
